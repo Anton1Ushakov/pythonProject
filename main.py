@@ -121,7 +121,7 @@ while True:
 
                 all_dates_target_month = [target_month_first_day.replace(day=day).strftime('%Y-%m-%d') for day in range(1, last_day_current_month.day + 1)]
 
-                dates_from_response = [data['date'] for data in dates_data]
+                dates_from_response = [data['date'] for data in not dates_data]
                 missing_dates = [date for date in all_dates_target_month if date in dates_from_response]
 
                 all_missing_dates.extend(missing_dates)  # Добавляем пропущенные даты в общий список
