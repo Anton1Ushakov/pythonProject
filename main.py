@@ -114,7 +114,6 @@ while True:
 
                 dates_response = requests.get(dates_url, params=dates_params, headers=dates_headers)
                 if dates_response.status_code != 200:
-                    print(f"Ошибка получения слотов для siteId={site_id} на {start_date} - {end_date}: {dates_response.status_code}")
                     time.sleep(60)
                     continue  # Перезапуск цикла while
 
