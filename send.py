@@ -34,11 +34,13 @@ async def main():
             last_update_str = city[2]
 
             # Проверяем время последнего обновления
+            message = f"Слоты в городе {city_name} не обновлялись более 2 часов."
+            await send_message(user_id_for_notification, message)
             if last_update_str:
                 last_update = datetime.strptime(last_update_str, '%Y-%m-%d %H:%M:%S')
                 time_difference = current_time - last_update
-                if time_difference > timedelta(hours=5):
-                    message = f"Слоты в городе {city_name} не обновлялись более 5 часов."
+                if time_difference > timedelta(hours=2):
+                    message = f"Слоты в городе {city_name} не обновлялись более 2 часов."
                     await send_message(user_id_for_notification, message)
 
             # Проверяем наличие слотов
