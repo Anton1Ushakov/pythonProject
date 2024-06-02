@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import sqlite3
 from aiogram import Bot, Dispatcher, types
 from aiogram.contrib.middlewares.logging import LoggingMiddleware

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import requests
 import time
 from DrissionPage import ChromiumPage
