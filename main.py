@@ -20,7 +20,7 @@ while True:
             cookie_string += f"{key}={value}; "
 
         cookie_string = cookie_string.rstrip("; ") + '"'
-
+        print(cf_clearance)
 
         token_url = "https://ru.almaviva-visa.services/api/login"
         token_data = {
@@ -54,6 +54,7 @@ while True:
         # Получение токена
         token_response = requests.post(token_url, json=token_data, headers=headers1)
         if token_response.status_code != 200:
+            print(f"Ошибка получения токена: {token_response.status_code}")
             time.sleep(60)
             continue  # Перезапуск цикла while
         token = token_response.json()["accessToken"]
@@ -114,15 +115,17 @@ while True:
 
                 dates_response = requests.get(dates_url, params=dates_params, headers=dates_headers)
                 if dates_response.status_code != 200:
+                    print(f"Ошибка получения слотов для siteId={site_id} на {start_date} - {end_date}: {dates_response.status_code}")
                     time.sleep(60)
                     continue  # Перезапуск цикла while
 
                 dates_data = dates_response.json()
-
+                print(f"Данные для siteId={site_id} на {start_date} - {end_date}:")
+                print(dates_data)
                 all_dates_target_month = [target_month_first_day.replace(day=day).strftime('%Y-%m-%d') for day in range(1, last_day_current_month.day + 1)]
 
-                dates_from_response = [data['date'] for data in not dates_data]
-                missing_dates = [date for date in all_dates_target_month if date in dates_from_response]
+                dates_from_response = [data['date'] for data in dates_data]
+                missing_dates = [date for date in all_dates_target_month if date not in dates_from_response]
 
                 all_missing_dates.extend(missing_dates)  # Добавляем пропущенные даты в общий список
 
@@ -130,12 +133,13 @@ while True:
             all_missing_dates_str = str(all_missing_dates)
             last_update = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             cursor.execute('UPDATE cities SET dates = ?, last_update = ? WHERE alt_number = ?', (all_missing_dates_str, last_update, site_id,))
-
+            print(f"Пропущенные даты для siteId={site_id}: {all_missing_dates_str}")
+            print(f"Последнее обновление для siteId={site_id}: {last_update}")
             conn.commit()
             time.sleep(4)
 
         time.sleep(5)
 
     except Exception as e:
-
+        print(f"Произошла ошибка: {e}. Перезапуск через 60 секунд.")
         time.sleep(60)
